@@ -53,4 +53,13 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
 
     }
 
+    @Override
+    public Usuario findByCredenciales(String usuario, String contrasena) {
+        String sql = "SELECT * FROM public.usuario u  WHERE u.\"nombreUsuario\" = \'"+ usuario +"\' AND  u.\"contrasena\" = \'"+ contrasena +"\'";
+        Query query = em.createNativeQuery(sql,Usuario.class);   
+        List<Usuario> usuarios = query.getResultList();
+        return usuarios.get(0);
+
+    }
+
 }
