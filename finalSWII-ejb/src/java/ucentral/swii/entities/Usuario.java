@@ -69,6 +69,13 @@ public class Usuario implements Serializable {
     private List<Administrador> administradorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Profesor> profesorList;
+    
+    public static final String TIPO_ADMIN = "ADMIN";
+    public static final String TIPO_PROFE = "PROFESOR";
+    public static final String TIPO_ESTUDIANTE = "ESTUDIANTE";
+    
+    public static final String ESTADO_ACTIVO = "ACTIVO";
+    public static final String ESTADO_INACTIVO = "INACTIVO";
 
     public Usuario() {
     }
