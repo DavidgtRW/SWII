@@ -65,8 +65,8 @@ public class AdministradorBean implements Serializable {
 
     private void llenarEstados() {
         estados = new ArrayList<>();
-        estados.add(new SelectItem("ACTIVO", "ACTIVO"));
-        estados.add(new SelectItem("INACTIVO", "INACTIVO"));
+        estados.add(new SelectItem(Usuario.ESTADO_ACTIVO, Usuario.ESTADO_ACTIVO));
+        estados.add(new SelectItem(Usuario.ESTADO_INACTIVO, Usuario.ESTADO_INACTIVO));
     }
     
     public void cambiarEstado(ValueChangeEvent event){
@@ -77,7 +77,7 @@ public class AdministradorBean implements Serializable {
     public String crearUsuario() {
         boolean auxConfirmacion = false;
         try {
-            tipoUsuario = "ADMINISTRADOR";
+            tipoUsuario = Usuario.TIPO_ADMIN;
             usuario = new Usuario(nombreUsuario, contrasena, tipoUsuario, estado);
             usuarioFacade.insertar(usuario);
             auxConfirmacion = true;
