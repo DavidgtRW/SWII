@@ -34,4 +34,6 @@ public interface UsuarioFacadeLocal {
     
     List<Usuario> getUsuarios();
     
+    Usuario findByCredenciales(String usuario, String contraseña);
+    
 }
