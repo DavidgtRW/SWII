@@ -11,9 +11,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpSession;
 import ucentral.swii.entities.Usuario;
 import ucentral.swii.model.UsuarioFacadeLocal;
+import ucentral.swii.utils.Util;
 
 /**
  *
@@ -68,7 +72,44 @@ public class UsuarioBean implements Serializable {
         }
 
     }
+    
+    public String validateUsernamePassword() {
+        Usuario usuario = usuarioFacade.findByCredenciales(nombreUsuario, contrasena);
+        boolean result = usuario == null;
+        if (!result) {
 
+            // get Http Session and store username
+            HttpSession session = Util.getSession();
+            session.setAttribute("username", usuario.getNombreUsuario());
+            String tipoUsuarios = usuario.getTipoUsuario();
+        switch (tipoUsuarios) {
+            case Usuario.TIPO_ADMIN:
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Login!",
+                    "Admin"));
+                return tipoUsuarios;
+            case Usuario.TIPO_PROFE:
+                return tipoUsuarios;
+            case Usuario.TIPO_ESTUDIANTE:
+                return tipoUsuarios;
+            default:
+                return "NO EXISTE ESE USUARIO";
+        }
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    "Invalid Login!",
+                    "Please Try Again!"));
+
+            // invalidate session, and redirect to other pages
+            //message = "Invalid Login. Please Try Again!";
+            return "login";
+        }
+    }
+
+
+
+    
+ 
     public Long getIdUsuario() {
         return idUsuario;
     }
