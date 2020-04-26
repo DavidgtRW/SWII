@@ -60,6 +60,11 @@ public class AdministradorBean implements Serializable {
 
     private void inicializar() {
         llenarEstados();
+        correo="";
+        
+        
+        nombreUsuario = "";
+        contrasena = "";
         mostrarDialogo = false;
     }
 
@@ -75,20 +80,22 @@ public class AdministradorBean implements Serializable {
     }
 
     public String crearUsuario() {
-        boolean auxConfirmacion = false;
         try {
             tipoUsuario = Usuario.TIPO_ADMIN;
             usuario = new Usuario(nombreUsuario, contrasena, tipoUsuario, estado);
             usuarioFacade.insertar(usuario);
-            auxConfirmacion = true;
             mostrarDialogo = false;
             System.out.println("MARCA1");
         } catch (Exception e) {
-            auxConfirmacion = false;
+            inicializar();
             mostrarDialogo = false;
         }
 
         return "correcto";
+    }
+    
+    public void crearAdministrador(Usuario usuario){
+        
     }
 
     public String getNombreUsuario() {
