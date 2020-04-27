@@ -1,12 +1,42 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Facelet Title</title>
     </h:head>
-    <h:body>
-        <h:link value="PRB" outcome="/administradorPrincipal"/>
+   <h:body style="text-align:center">
+        <p:growl id="mensajes" showDetail="true" life="2000" />
+        <h:form>
+            <p:panel header="Login" style="width:400px">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="username" value="Usuario:" />
+                    <p:inputText value="#{usuarioBean.nombreUsuario}" id="username"
+                                 required="true" label="username" />
+                    <h:outputLabel for="password" value="Clave:" />
+                    <p:password value="#{usuarioBean.contrasena}" id="password" required="true"
+                                label="password" />
+                    <f:facet name="footer">
+                        <p:commandButton id="loginButton" value="Login"
+                                         action="#{usuarioBean.validateUsernamePassword()}" update=":mensajes" 
+                                         oncomplete="manejarLogin(xhr, status, args)" />
+                    </f:facet>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
     </h:body>
+    <script type="text/javascript">
+        //<![CDATA[
+        function manejarLogin(xhr, status, args) {
+            if (!args.validationFailed && args.estaLogeado) {
+                setTimeout(function () {
+                    window.location = args.view;
+                }, 500);
+            }
+        }
+        //]]>
+    </script>
 </html>
 
