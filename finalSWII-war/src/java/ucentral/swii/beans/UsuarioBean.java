@@ -29,7 +29,7 @@ public class UsuarioBean implements Serializable {
 
     @EJB
     private UsuarioFacadeLocal usuarioFacade;
-    
+
     private List<SelectItem> estados;
 
     private Long idUsuario;
@@ -45,11 +45,12 @@ public class UsuarioBean implements Serializable {
         llenarEstados();
     }
 
-    private void llenarEstados(){
+    private void llenarEstados() {
         estados = new ArrayList<>();
         estados.add(new SelectItem("Activo", "ACTIVO"));
         estados.add(new SelectItem("Inactivo", "INACTIVO"));
     }
+
     public String redirInicio() {
         return "inicio";
     }
@@ -68,11 +69,11 @@ public class UsuarioBean implements Serializable {
             usuario.setEstado(estado);
             usuarioFacade.insertar(usuario);
         } catch (Exception e) {
-            
+
         }
 
     }
-    
+
     public String validateUsernamePassword() {
         Usuario usuario = usuarioFacade.findByCredenciales(nombreUsuario, contrasena);
         boolean result = usuario == null;
@@ -82,19 +83,19 @@ public class UsuarioBean implements Serializable {
             HttpSession session = Util.getSession();
             session.setAttribute("username", usuario.getNombreUsuario());
             String tipoUsuarios = usuario.getTipoUsuario();
-        switch (tipoUsuarios) {
-            case Usuario.TIPO_ADMIN:
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Login!",
-                    "Admin"));
-                return tipoUsuarios;
-            case Usuario.TIPO_PROFE:
-                return tipoUsuarios;
-            case Usuario.TIPO_ESTUDIANTE:
-                return tipoUsuarios;
-            default:
-                return "NO EXISTE ESE USUARIO";
-        }
+            switch (tipoUsuarios) {
+                case Usuario.TIPO_ADMIN:
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Login!",
+                            "Admin"));
+                    return tipoUsuarios;
+                case Usuario.TIPO_PROFE:
+                    return tipoUsuarios;
+                case Usuario.TIPO_ESTUDIANTE:
+                    return tipoUsuarios;
+                default:
+                    return "NO EXISTE ESE USUARIO";
+            }
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
                     "Invalid Login!",
@@ -106,10 +107,6 @@ public class UsuarioBean implements Serializable {
         }
     }
 
-
-
-    
- 
     public Long getIdUsuario() {
         return idUsuario;
     }
@@ -157,6 +154,5 @@ public class UsuarioBean implements Serializable {
     public void setEstados(List<SelectItem> estados) {
         this.estados = estados;
     }
-    
-    
+
 }

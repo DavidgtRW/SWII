@@ -16,18 +16,23 @@ import ucentral.swii.entities.Profesor;
 @Local
 public interface ProfesorFacadeLocal {
 
-    void create(Profesor profesor);
+    //void create(Profesor profesor);
 
-    void edit(Profesor profesor);
+    //void edit(Profesor profesor);
 
     void remove(Profesor profesor);
 
-    Profesor find(Object id);
+    //Profesor find(Object id);
 
-    List<Profesor> findAll();
+    //List<Profesor> findAll();
 
-    List<Profesor> findRange(int[] range);
+    //List<Profesor> findRange(int[] range);
 
     int count();
     
+    void insertar(Profesor profesor);
+    
+    List<Profesor> getAdministradores();
+    
+    long encontrarUsuario(Profesor profesor);
 }

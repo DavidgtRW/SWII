@@ -13,6 +13,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import ucentral.swii.entities.Administrador;
+import ucentral.swii.entities.Profesor;
 import ucentral.swii.entities.Usuario;
 import ucentral.swii.model.AdministradorFacadeLocal;
 import ucentral.swii.model.EstudianteFacadeLocal;
@@ -38,9 +40,19 @@ public class AdministradorBean implements Serializable {
 
     //Administrador
     private String correo;
-    private Usuario usuario;
+    
+    private List<Administrador> listaAdministradores;
+    
+    //Profesor
+    private String nombreProfesor;
+    private String apellidoProfesor;
+    private String correoProfesor;
+    private String telefonoProfesor;
+    
+    private List<Profesor> listaProfesores;
 
     //Usuario
+    private Long idUsuario;
     private String nombreUsuario;
     private String contrasena;
     private String tipoUsuario;
@@ -50,6 +62,10 @@ public class AdministradorBean implements Serializable {
     //Util
     private String confirmarContrasena;
     private boolean mostrarDialogo;
+    private Usuario usuarioAux;
+    
+    //Comun
+    private Usuario usuario;
 
     /**
      * Creates a new instance of AdministradorBean
@@ -60,9 +76,14 @@ public class AdministradorBean implements Serializable {
 
     private void inicializar() {
         llenarEstados();
-        correo="";
+        correo = "";
         
-        
+        nombreProfesor = "";
+        apellidoProfesor = "";
+        correoProfesor = "";
+        telefonoProfesor = "";
+
+        usuario = null;
         nombreUsuario = "";
         contrasena = "";
         mostrarDialogo = false;
@@ -73,31 +94,111 @@ public class AdministradorBean implements Serializable {
         estados.add(new SelectItem(Usuario.ESTADO_ACTIVO, Usuario.ESTADO_ACTIVO));
         estados.add(new SelectItem(Usuario.ESTADO_INACTIVO, Usuario.ESTADO_INACTIVO));
     }
-    
-    public void cambiarEstado(ValueChangeEvent event){
+
+    public void cambiarEstado(ValueChangeEvent event) {
         estado = (String) event.getNewValue();
-        System.out.println("MARCA2"+estado);
+        System.out.println("MARCA2: " + estado);
     }
 
-    public String crearUsuario() {
+    public String crearUsuarioAdministrador() {
         try {
             tipoUsuario = Usuario.TIPO_ADMIN;
-            usuario = new Usuario(nombreUsuario, contrasena, tipoUsuario, estado);
+            //usuario = new Usuario(nombreUsuario, contrasena, tipoUsuario, estado);
+            idUsuario = (long) usuarioFacade.ultimoRegistro();
+            usuario = new Usuario(idUsuario, nombreUsuario, contrasena, tipoUsuario, estado);
             usuarioFacade.insertar(usuario);
             mostrarDialogo = false;
-            System.out.println("MARCA1");
+            System.out.println("**********************+MARCA1: " + usuario.getIdUsuario());
+            crearAdministrador(usuario);
+
         } catch (Exception e) {
             inicializar();
             mostrarDialogo = false;
         }
+        inicializar();
+        return "correcto";
+    }
 
+    public void crearAdministrador(Usuario usuario) {
+        Administrador administrador = new Administrador(correo);
+        administrador.setUsuario(usuario);
+        administradorFacade.insertar(administrador);
+        System.out.println("**********************+MARCA3 ");
+    }
+
+    public List<Administrador> getAdministradores() {
+        listaAdministradores = new ArrayList<>();
+        listaAdministradores = administradorFacade.getAdministradores();
+        completarListaAdministradores();
+        return listaAdministradores;
+    }
+
+    private void completarListaAdministradores() {
+        try {
+            listaAdministradores.forEach((administrador) -> {
+                long idUsuarioAux = administradorFacade.encontrarUsuario(administrador);
+                Usuario usuarioAux = usuarioFacade.find(idUsuarioAux);
+                administrador.setUsuario(usuarioAux);
+            });
+        } catch (Exception e) {
+            System.out.println("ERROR" + e);
+        }
+    }
+
+    public void eliminarAdministrador(Administrador administrador) {
+        try {
+            System.out.println("***********MARCA6");
+            usuarioAux = new Usuario();
+            usuarioAux = administrador.getUsuario();
+            administradorFacade.remove(administrador);
+            eliminarUsuario();
+        } catch (Exception e) {
+            System.out.println("ERROR" + e);
+        }
+    }
+
+    public void eliminarUsuario() {
+        try {
+            usuarioFacade.remove(usuarioAux);
+        } catch (Exception e) {
+            System.out.println("ERROR" + e);
+        }
+    }
+    
+    public String crearUsuarioProfesor() {
+        try {
+            tipoUsuario = Usuario.TIPO_PROFE;
+            //usuario = new Usuario(nombreUsuario, contrasena, tipoUsuario, estado);
+            idUsuario = (long) usuarioFacade.ultimoRegistro();
+            usuario = new Usuario(idUsuario, generarNombreUsuario(), contrasena, tipoUsuario, estado);
+            usuarioFacade.insertar(usuario);
+            mostrarDialogo = false;
+            System.out.println("**********************+MARCA9: " + usuario.getIdUsuario());
+            crearProfesor(usuario);
+
+        } catch (Exception e) {
+            inicializar();
+            mostrarDialogo = false;
+        }
+        inicializar();
         return "correcto";
     }
     
-    public void crearAdministrador(Usuario usuario){
+    private String generarNombreUsuario(){
         
+        String usuarioGenerado = ""+nombreProfesor.charAt(0)+""+apellidoProfesor
+                +""+idUsuario;
+        
+        return usuarioGenerado;
     }
-
+    
+    public void crearProfesor(Usuario usuario) {
+        Profesor profesor = new Profesor(nombreProfesor, apellidoProfesor, correoProfesor, telefonoProfesor);
+        profesor.setUsuario(usuario);
+        profesorFacade.insertar(profesor);
+        System.out.println("**********************+MARCA10 ");
+    }
+    
     public String getNombreUsuario() {
         return nombreUsuario;
     }
@@ -169,5 +270,56 @@ public class AdministradorBean implements Serializable {
     public void setMostrarDialogo(boolean mostrarDialogo) {
         this.mostrarDialogo = mostrarDialogo;
     }
+
+    public List<Administrador> getListaAdministradores() {
+        return listaAdministradores;
+    }
+
+    public void setListaAdministradores(List<Administrador> listaAdministradores) {
+        this.listaAdministradores = listaAdministradores;
+    }
+
+    public String getNombreProfesor() {
+        return nombreProfesor;
+    }
+
+    public void setNombreProfesor(String nombreProfesor) {
+        this.nombreProfesor = nombreProfesor;
+    }
+
+    public String getApellidoProfesor() {
+        return apellidoProfesor;
+    }
+
+    public void setApellidoProfesor(String apellidoProfesor) {
+        this.apellidoProfesor = apellidoProfesor;
+    }
+
+    public String getCorreoProfesor() {
+        return correoProfesor;
+    }
+
+    public void setCorreoProfesor(String correoProfesor) {
+        this.correoProfesor = correoProfesor;
+    }
+
+    public String getTelefonoProfesor() {
+        return telefonoProfesor;
+    }
+
+    public void setTelefonoProfesor(String telefonoProfesor) {
+        this.telefonoProfesor = telefonoProfesor;
+    }
+
+    public List<Profesor> getListaProfesores() {
+        return listaProfesores;
+    }
+
+    public void setListaProfesores(List<Profesor> listaProfesores) {
+        this.listaProfesores = listaProfesores;
+    }
+    
+    
+    
 
 }

@@ -20,9 +20,9 @@ public interface UsuarioFacadeLocal {
 
     //void edit(Usuario usuario);
 
-    //void remove(Usuario usuario);
+    void remove(Usuario usuario);
 
-    //Usuario find(Object id);
+    Usuario find(long id);
 
     //List<Usuario> findAll();
 
@@ -33,6 +33,8 @@ public interface UsuarioFacadeLocal {
     void insertar(Usuario usuario);
     
     List<Usuario> getUsuarios();
+    
+    int ultimoRegistro();
     
     Usuario findByCredenciales(String usuario, String contraseña);
     

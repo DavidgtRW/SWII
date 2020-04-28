@@ -8,25 +8,37 @@
     <h:head>
         <title>Facelet Title</title>
     </h:head>
-
-    <h:body>    
+    <h:body>
         <ui:composition template="./Templates/TemplatePantallaPrincipalAdministrador.xhtml">
             <ui:define name="content">
                 <f:view>
                     <div align="center">
-                        <h:form id="Registro">
+                        <h:form id="RegistroProfesor">
                             <div>
+                                
                                 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
 
                                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
-                                        <p:outputLabel value="Nombre usuario:" style="font-weight: bold"/>
-                                        <p:inputText value="#{administradorBean.nombreUsuario}" disabled="false"
+                                        <p:outputLabel value="Nombre:" style="font-weight: bold"/>
+                                        <p:inputText value="#{administradorBean.nombreProfesor}" disabled="false"
+                                                     required="true" requiredMessage="Complete el campo requerido"/> 
+                                    </h:panelGrid>
+                                    
+                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
+                                        <p:outputLabel value="Apellido:" style="font-weight: bold"/>
+                                        <p:inputText value="#{administradorBean.apellidoProfesor}" disabled="false"
                                                      required="true" requiredMessage="Complete el campo requerido"/> 
                                     </h:panelGrid>
 
                                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
                                         <p:outputLabel value="Correo:" style="font-weight: bold"/>
-                                        <p:inputText value="#{administradorBean.correo}" disabled="false"
+                                        <p:inputText value="#{administradorBean.correoProfesor}" disabled="false"
+                                                     required="true" requiredMessage="Complete el campo requerido"/> 
+                                    </h:panelGrid>
+                                    
+                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
+                                        <p:outputLabel value="Telefono" style="font-weight: bold"/>
+                                        <p:inputText value="#{administradorBean.telefonoProfesor}" disabled="false"
                                                      required="true" requiredMessage="Complete el campo requerido"/> 
                                     </h:panelGrid>
 
@@ -35,7 +47,7 @@
                                         <p:inputText value="#{administradorBean.contrasena}" disabled="false"
                                                      required="true" requiredMessage="Complete el campo requerido"/> 
                                     </h:panelGrid>
-
+                                    
                                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
                                         <p:outputLabel value="Confirmar Contraseña:" style="font-weight: bold"/>
                                         <p:inputText value="#{administradorBean.correo}" disabled="true"
@@ -44,7 +56,7 @@
 
                                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
                                         <p:outputLabel value="Tipo de usuario:" style="font-weight: bold"/>
-                                        <p:inputText value="Administrador" disabled="true"/> 
+                                        <p:inputText value="Profesor" disabled="true"/> 
                                     </h:panelGrid>
 
                                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
@@ -61,7 +73,7 @@
                             </div>
                             <div align="center">
                             
-                                <p:commandButton value="Confirmar" action="#{administradorBean.crearUsuarioAdministrador()}" update=":Registro">
+                                <p:commandButton value="Confirmar" action="#{administradorBean.crearUsuarioProfesor()}" update=":RegistroProfesor">
                                     <p:confirm header="Confirmación" message="¿Confirmar operación?" icon="pi pi-exclamation-triangle" />
                                 </p:commandButton>
 
@@ -70,13 +82,11 @@
                                     <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
                                 </p:confirmDialog>  
                             </div>
-
+                            
                         </h:form>
                     </div>
                 </f:view>
             </ui:define>
-
-
         </ui:composition>
     </h:body>
 </html>

@@ -26,10 +26,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "administrador")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Administrador.findAll", query = "SELECT a FROM Administrador a")
-    , @NamedQuery(name = "Administrador.findByIdAdministrador", query = "SELECT a FROM Administrador a WHERE a.idAdministrador = :idAdministrador")
-    , @NamedQuery(name = "Administrador.findByCorreo", query = "SELECT a FROM Administrador a WHERE a.correo = :correo")})
 public class Administrador implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,8 +46,8 @@ public class Administrador implements Serializable {
     public Administrador() {
     }
 
-    public Administrador(Long idAdministrador) {
-        this.idAdministrador = idAdministrador;
+    public Administrador(String correo) {
+        this.correo = correo;
     }
 
     public Administrador(Long idAdministrador, String correo) {
@@ -80,6 +76,7 @@ public class Administrador implements Serializable {
     }
 
     public void setUsuario(Usuario usuario) {
+        
         this.usuario = usuario;
     }
 

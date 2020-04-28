@@ -17,24 +17,23 @@ import ucentral.swii.entities.Usuario;
  * @author david
  */
 @Stateless
-public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFacadeLocal {
+public class UsuarioFacade implements UsuarioFacadeLocal {
 
     @PersistenceContext(unitName = "finalSWII-ejbPU")
     private EntityManager em;
 
-    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
 
     public UsuarioFacade() {
-        super(Usuario.class);
+ 
     }
 
     @Override
     public void insertar(Usuario usuario) {
         Query query = em.createNativeQuery("INSERT INTO usuario (\"idUsuario\", \"nombreUsuario\", contrasena, \"tipoUsuario\", estado) "
-                + "VALUES (" + ultimoRegistro() + ", '" + usuario.getNombreUsuario() + "', '" + usuario.getContrasena() + "', "
+                + "VALUES (" + usuario.getIdUsuario() + ", '" + usuario.getNombreUsuario() + "', '" + usuario.getContrasena() + "', "
                 + "'" + usuario.getTipoUsuario() + "', '" + usuario.getEstado() + "')");
         query.executeUpdate();
     }
@@ -47,9 +46,17 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
         return query.getResultList();
     }
 
-    private int ultimoRegistro() {
-        Query query = em.createNativeQuery("select count(*) from usuario");
-        return ((Long) query.getSingleResult()).intValue() + 1;
+    @Override
+    public int ultimoRegistro() {
+        Query query = em.createNativeQuery("SELECT max(\"idUsuario\") FROM usuario");
+        int valor = 1;
+        if(query.getSingleResult()==null){
+            return valor;
+        }else{
+            valor = ((Long) query.getSingleResult()).intValue() + 1;
+        }
+            
+        return valor;
 
     }
 
@@ -60,6 +67,27 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
         List<Usuario> usuarios = query.getResultList();
         return usuarios.get(0);
 
+    }
+
+    @Override
+    public int count() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Usuario find(long idUsuario) {
+        String sql = ("SELECT \"idUsuario\", contrasena, estado, \"nombreUsuario\", \"tipoUsuario\" FROM usuario WHERE "
+                + "(\"idUsuario\" ="+idUsuario+")");
+        Query query = em.createNativeQuery(sql,Usuario.class); 
+        return (Usuario) query.getSingleResult();
+    }
+
+    @Override
+    public void remove(Usuario usuario) {
+        String sql = ("DELETE FROM usuario WHERE "
+                + "(\"idUsuario\" ="+usuario.getIdUsuario()+")");
+        Query query = em.createNativeQuery(sql); 
+        query.executeUpdate();
     }
 
 }

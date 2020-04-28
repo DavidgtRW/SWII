@@ -16,17 +16,17 @@ import ucentral.swii.entities.Estudiante;
 @Local
 public interface EstudianteFacadeLocal {
 
-    void create(Estudiante estudiante);
+    //void create(Estudiante estudiante);
 
-    void edit(Estudiante estudiante);
+    //void edit(Estudiante estudiante);
 
-    void remove(Estudiante estudiante);
+    //void remove(Estudiante estudiante);
 
-    Estudiante find(Object id);
+    //Estudiante find(Object id);
 
-    List<Estudiante> findAll();
+    //List<Estudiante> findAll();
 
-    List<Estudiante> findRange(int[] range);
+    //List<Estudiante> findRange(int[] range);
 
     int count();
     

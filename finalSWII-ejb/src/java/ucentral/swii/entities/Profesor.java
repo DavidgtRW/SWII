@@ -26,13 +26,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "profesor")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Profesor.findAll", query = "SELECT p FROM Profesor p")
-    , @NamedQuery(name = "Profesor.findByIdProfesor", query = "SELECT p FROM Profesor p WHERE p.idProfesor = :idProfesor")
-    , @NamedQuery(name = "Profesor.findByNombre", query = "SELECT p FROM Profesor p WHERE p.nombre = :nombre")
-    , @NamedQuery(name = "Profesor.findByApellido", query = "SELECT p FROM Profesor p WHERE p.apellido = :apellido")
-    , @NamedQuery(name = "Profesor.findByCorreo", query = "SELECT p FROM Profesor p WHERE p.correo = :correo")
-    , @NamedQuery(name = "Profesor.findByTelefono", query = "SELECT p FROM Profesor p WHERE p.telefono = :telefono")})
 public class Profesor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -70,11 +63,12 @@ public class Profesor implements Serializable {
         this.idProfesor = idProfesor;
     }
 
-    public Profesor(Long idProfesor, String nombre, String apellido, String correo) {
-        this.idProfesor = idProfesor;
+    public Profesor(String nombre, String apellido, String correo, String telefono) {
+    
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
+        this.telefono = telefono;
     }
 
     public Long getIdProfesor() {

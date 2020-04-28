@@ -15,18 +15,22 @@ import ucentral.swii.entities.Estudiante;
  * @author david
  */
 @Stateless
-public class EstudianteFacade extends AbstractFacade<Estudiante> implements EstudianteFacadeLocal {
+public class EstudianteFacade implements EstudianteFacadeLocal {
 
     @PersistenceContext(unitName = "finalSWII-ejbPU")
     private EntityManager em;
 
-    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
 
     public EstudianteFacade() {
-        super(Estudiante.class);
+        
+    }
+
+    @Override
+    public int count() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
