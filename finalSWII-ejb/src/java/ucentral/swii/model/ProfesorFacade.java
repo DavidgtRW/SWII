@@ -32,7 +32,11 @@ public class ProfesorFacade implements ProfesorFacadeLocal {
 
     @Override
     public void remove(Profesor profesor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = ("DELETE FROM profesor WHERE "
+                + "(\"idProfesor\" =" + profesor.getIdProfesor() + ")");
+        Query query = em.createNativeQuery(sql);
+        System.out.println("*************MARCA7: "+sql);
+        query.executeUpdate();
     }
 
     @Override
@@ -70,17 +74,19 @@ public class ProfesorFacade implements ProfesorFacadeLocal {
             
         return valor;
     }
-
+    
     @Override
-    public List<Profesor> getAdministradores() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Profesor> getProfesores() {
+        Query query = em.createNativeQuery("SELECT \"idProfesor\", nombre, apellido, correo, telefono "
+                + "FROM profesor", Profesor.class);
+
+        return query.getResultList();
     }
 
     @Override
     public long encontrarUsuario(Profesor profesor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query query = em.createNativeQuery("SELECT usuario FROM profesor "
+                + "WHERE (\"idProfesor\" = " + profesor.getIdProfesor()+ ")");
+        return ((Long) query.getSingleResult()).intValue();
     }
-
-  
-    
 }

@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import ucentral.swii.entities.Administrador;
+import ucentral.swii.entities.Estudiante;
 import ucentral.swii.entities.Profesor;
 import ucentral.swii.entities.Usuario;
 import ucentral.swii.model.AdministradorFacadeLocal;
@@ -42,6 +43,9 @@ public class AdministradorBean implements Serializable {
     private String correo;
     
     private List<Administrador> listaAdministradores;
+    
+    //Estudiante
+    private List<Estudiante> listaEstudiantes;
     
     //Profesor
     private String nombreProfesor;
@@ -199,6 +203,56 @@ public class AdministradorBean implements Serializable {
         System.out.println("**********************+MARCA10 ");
     }
     
+    public List<Profesor> getProfesores() {
+        listaProfesores = new ArrayList<>();
+        listaProfesores = profesorFacade.getProfesores();
+        completarListaProfesores();
+        return listaProfesores;
+    }
+    
+    private void completarListaProfesores() {
+        try {
+            listaProfesores.forEach((profesor) -> {
+                long idUsuarioAux = profesorFacade.encontrarUsuario(profesor);
+                Usuario usuarioAux = usuarioFacade.find(idUsuarioAux);
+                profesor.setUsuario(usuarioAux);
+            });
+        } catch (Exception e) {
+            System.out.println("ERROR" + e);
+        }
+    }
+    
+    public void eliminarProfesor(Profesor profesor) {
+        try {
+            System.out.println("***********MARCA6");
+            usuarioAux = new Usuario();
+            usuarioAux = profesor.getUsuario();
+            profesorFacade.remove(profesor);
+            eliminarUsuario();
+        } catch (Exception e) {
+            System.out.println("ERROR" + e);
+        }
+    }
+    
+    public List<Estudiante> getEstudiantes() {
+        listaEstudiantes = new ArrayList<>();
+        listaEstudiantes = estudianteFacade.getEstudiantes();
+        completarListaEstudiantes();
+        return listaEstudiantes;
+    }
+    
+    private void completarListaEstudiantes() {
+        try {
+            listaEstudiantes.forEach((estudiante) -> {
+                long idUsuarioAux = estudianteFacade.encontrarUsuario(estudiante);
+                Usuario usuarioAux = usuarioFacade.find(idUsuarioAux);
+                estudiante.setUsuario(usuarioAux);
+            });
+        } catch (Exception e) {
+            System.out.println("ERROR" + e);
+        }
+    }
+    
     public String getNombreUsuario() {
         return nombreUsuario;
     }
@@ -318,8 +372,12 @@ public class AdministradorBean implements Serializable {
     public void setListaProfesores(List<Profesor> listaProfesores) {
         this.listaProfesores = listaProfesores;
     }
-    
-    
-    
 
+    public List<Estudiante> getListaEstudiantes() {
+        return listaEstudiantes;
+    }
+
+    public void setListaEstudiantes(List<Estudiante> listaEstudiantes) {
+        this.listaEstudiantes = listaEstudiantes;
+    }
 }

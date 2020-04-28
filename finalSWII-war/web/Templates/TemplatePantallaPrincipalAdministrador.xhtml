@@ -34,7 +34,7 @@
                     <p:submenu label="Profesores" icon="pi pi-file">
                         <p:column>
                             <p:submenu label="Control">
-                                <p:menuitem value="Ver profesores" url="#"/>
+                                <p:menuitem value="Ver profesores" outcome="administradorTablaProfesores"/>
                                 <p:menuitem value="Registrar nuevo profesor" outcome="administradorCrearNuevoProfesor" />
                             </p:submenu>
                         </p:column>
@@ -44,12 +44,12 @@
                      
                         <p:column>
                             <p:submenu label="Control">
-                                <p:menuitem value="Ver estudiantes" url="#" />
+                                <p:menuitem value="Ver estudiantes" outcome="administradorTablaEstudiantes" />
                             </p:submenu>
                         </p:column>
                     </p:submenu>
 
-                    <p:menuitem value="Quit" outcome="index" icon="pi pi-times" />
+                    <p:menuitem value="Salir" outcome="index" icon="pi pi-times" />
                 </p:megaMenu>
 
 

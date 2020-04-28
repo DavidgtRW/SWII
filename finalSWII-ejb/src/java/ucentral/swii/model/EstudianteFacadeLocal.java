@@ -20,7 +20,7 @@ public interface EstudianteFacadeLocal {
 
     //void edit(Estudiante estudiante);
 
-    //void remove(Estudiante estudiante);
+    void remove(Estudiante estudiante);
 
     //Estudiante find(Object id);
 
@@ -29,5 +29,11 @@ public interface EstudianteFacadeLocal {
     //List<Estudiante> findRange(int[] range);
 
     int count();
+    
+    void insertar(Estudiante estudiante);
+    
+    List<Estudiante> getEstudiantes();
+    
+    long encontrarUsuario(Estudiante estudiante);
     
 }

@@ -32,7 +32,7 @@ public interface ProfesorFacadeLocal {
     
     void insertar(Profesor profesor);
     
-    List<Profesor> getAdministradores();
+    List<Profesor> getProfesores();
     
     long encontrarUsuario(Profesor profesor);
 }
