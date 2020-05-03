@@ -12,10 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
+import ucentral.swii.entities.Estudiante;
 import ucentral.swii.entities.Usuario;
+import ucentral.swii.model.EstudianteFacade;
+import ucentral.swii.model.EstudianteFacadeLocal;
 import ucentral.swii.model.UsuarioFacadeLocal;
 import ucentral.swii.utils.Util;
 
@@ -29,14 +33,17 @@ public class UsuarioBean implements Serializable {
 
     @EJB
     private UsuarioFacadeLocal usuarioFacade;
+    @EJB
+    private EstudianteFacadeLocal estudianteFacade;
 
     private List<SelectItem> estados;
-
     private Long idUsuario;
     private String nombreUsuario;
     private String contrasena;
     private String tipoUsuario;
     private String estado;
+    @ManagedProperty(value = "#{param.pageId}")
+    private String pageId;
 
     /**
      * Creates a new instance of UsuarioBean
@@ -47,8 +54,8 @@ public class UsuarioBean implements Serializable {
 
     private void llenarEstados() {
         estados = new ArrayList<>();
-        estados.add(new SelectItem("Activo", "ACTIVO"));
-        estados.add(new SelectItem("Inactivo", "INACTIVO"));
+        estados.add(new SelectItem(Usuario.ESTADO_ACTIVO, Usuario.ESTADO_ACTIVO));
+        estados.add(new SelectItem(Usuario.ESTADO_INACTIVO, Usuario.ESTADO_INACTIVO));
     }
 
     public String redirInicio() {
@@ -81,7 +88,7 @@ public class UsuarioBean implements Serializable {
 
             // get Http Session and store username
             HttpSession session = Util.getSession();
-            session.setAttribute("username", usuario.getNombreUsuario());
+            session.setAttribute("usuario", usuario);
             String tipoUsuarios = usuario.getTipoUsuario();
             switch (tipoUsuarios) {
                 case Usuario.TIPO_ADMIN:
@@ -92,7 +99,7 @@ public class UsuarioBean implements Serializable {
                 case Usuario.TIPO_PROFE:
                     return tipoUsuarios;
                 case Usuario.TIPO_ESTUDIANTE:
-                    return tipoUsuarios;
+                    return cambioDeRuta(usuario);
                 default:
                     return "NO EXISTE ESE USUARIO";
             }
@@ -105,6 +112,10 @@ public class UsuarioBean implements Serializable {
             //message = "Invalid Login. Please Try Again!";
             return "login";
         }
+    }
+
+    public String registrar() {
+        return "Registrar";
     }
 
     public Long getIdUsuario() {
@@ -153,6 +164,19 @@ public class UsuarioBean implements Serializable {
 
     public void setEstados(List<SelectItem> estados) {
         this.estados = estados;
+    }
+
+    private String cambioDeRuta(Usuario usuario) {
+        Estudiante estudiante = estudianteFacade.encontrarEstudiante(usuario);
+        if (estudiante != null) {
+            if (estudiante.getPrimerIngreso()) {
+                return "cambiar_contrasena";
+            } else {
+                return "ingresarEstudiante";
+            }
+
+        }
+        return "no encontrado";
     }
 
 }

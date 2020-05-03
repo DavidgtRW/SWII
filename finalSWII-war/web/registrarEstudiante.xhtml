@@ -9,21 +9,27 @@
     </h:head>
     <h:body style="text-align:center">
         <div align="center">
-
-
             <p:growl id="mensajes" showDetail="true" life="2000" />
-            <p:panel header="Login" style="width:400px">
+
+            <p:panel header="Registro de estudiantes" style="width:400px">
                 <h:form>
                     <h:panelGrid columns="2" cellpadding="5">
-                        <h:outputLabel for="username" value="Usuario:" />
-                        <p:inputText value="#{usuarioBean.nombreUsuario}" id="username"
+                        <h:outputLabel for="nombre" value="Nombre:" />
+                        <p:inputText value="#{estudianteBean.nombre}" id="nombre"
                                      required="true" label="username" />
-                        <h:outputLabel for="password" value="Clave:" />
-                        <p:password value="#{usuarioBean.contrasena}" id="password" required="true"
-                                    label="password" />
+
+
+                        <h:outputLabel for="nombre" value="Apellido:" />
+                        <p:inputText value="#{estudianteBean.apellido}" id="apellido" 
+                                     required="true" label="apellido" />
+
+
+                        <h:outputLabel for="correo" value="Correo:" />
+                        <p:inputText value="#{estudianteBean.correo}" id="correo" required="true"
+                                     label="correo" />
                         <f:facet name="footer">
                             <p:commandButton id="loginButton" value="Login"
-                                             action="#{usuarioBean.validateUsernamePassword()}" update=":mensajes" 
+                                             action="#{estudianteBean.crearUsuarioEstudiante()}" update=":mensajes" 
                                              oncomplete="manejarLogin(xhr, status, args)" />
                         </f:facet>
 
@@ -32,7 +38,7 @@
                 </h:form>
                 <hr></hr>
                 <h:form>
-                    <h:commandLink action = "#{usuarioBean.registrar}" value = "No tienes una cuenta?, registrate aqui!"/>
+                    <h:commandLink action = "#{estudianteBean.ingresar()}" value = "Ya tienes una cuenta, ingresa aqui!"/>
                 </h:form>
             </p:panel>
 

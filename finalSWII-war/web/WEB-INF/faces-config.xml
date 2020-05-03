@@ -11,11 +11,42 @@
             <from-outcome>ADMIN</from-outcome>
             <to-view-id>/administradorPrincipal.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>Registrar</from-outcome>
+            <to-view-id>/registrarEstudiante.xhtml</to-view-id>
+        </navigation-case>
+          <navigation-case>
+            <from-outcome>cambiar_contrasena</from-outcome>
+            <to-view-id>/estudianteCambioContrasena.xhtml</to-view-id>
+        </navigation-case>
+         <navigation-case>
+            <from-outcome>ingresarEstudiante</from-outcome>
+            <to-view-id>/administradorPrincipal.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+   
+    
+    <navigation-rule>
+        <from-view-id>/registrarEstudiante.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ingresar</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     
     
+    
     <navigation-rule>
-        <from-view-id>/administradorCrearNuevo.xhtml</from-view-id>
+        <from-view-id>/registrarEstudiante.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>correcto</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+
+    <navigation-rule>
+        <from-view-id>/estudianteCambioContrasena.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>correcto</from-outcome>
             <to-view-id>/administradorPrincipal.xhtml</to-view-id>

@@ -52,6 +52,8 @@ public class Estudiante implements Serializable {
     @Size(max = 200)
     @Column(name = "telefono")
     private String telefono;
+    @Column(name = "primerIngreso")
+    private boolean primerIngreso;
     @JoinColumn(name = "usuario", referencedColumnName = "idUsuario")
     @ManyToOne(optional = false)
     private Usuario usuario;
@@ -116,6 +118,14 @@ public class Estudiante implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public boolean getPrimerIngreso() {
+        return primerIngreso;
+    }
+
+    public void setPrimerIngreso(boolean primerIngreso) {
+        this.primerIngreso = primerIngreso;
     }
 
     @Override
