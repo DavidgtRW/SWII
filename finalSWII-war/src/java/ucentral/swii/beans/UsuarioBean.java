@@ -97,6 +97,9 @@ public class UsuarioBean implements Serializable {
                             "Admin"));
                     return tipoUsuarios;
                 case Usuario.TIPO_PROFE:
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Login!",
+                            "Profesor"));
                     return tipoUsuarios;
                 case Usuario.TIPO_ESTUDIANTE:
                     return cambioDeRuta(usuario);

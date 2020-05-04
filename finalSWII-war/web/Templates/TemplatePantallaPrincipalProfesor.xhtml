@@ -21,21 +21,12 @@
 
 
                 <p:megaMenu style="margin-top:20px" styleClass="megaMenu">
-                    <p:submenu label="Administrador" icon="pi pi-check">
-                        <p:column>
-                            <p:submenu label="Control">
-                                <p:menuitem value="Principal" outcome="administradorPrincipal" />
-                                <p:menuitem value="Ver administradores" outcome="administradorTablaAdministradores" />
-                                <p:menuitem value="Registrar nuevo Administrador" outcome="administradorCrearNuevo" />
-                            </p:submenu>
-                        </p:column>                                   
-                    </p:submenu>
 
-                    <p:submenu label="Profesores" icon="pi pi-file">
+                    <p:submenu label="Examen" icon="pi pi-file">
                         <p:column>
                             <p:submenu label="Control">
-                                <p:menuitem value="Ver profesores" outcome="administradorTablaProfesores"/>
-                                <p:menuitem value="Registrar nuevo profesor" outcome="administradorCrearNuevoProfesor" />
+                                <p:menuitem value="Principal" outcome="profesorPrincipal" />
+                                <p:menuitem value="Crear examen" outcome="profesorCrearExamen" />
                             </p:submenu>
                         </p:column>
                     </p:submenu>
@@ -44,7 +35,7 @@
                      
                         <p:column>
                             <p:submenu label="Control">
-                                <p:menuitem value="Ver estudiantes" outcome="administradorTablaEstudiantes" />
+                                <p:menuitem value="Crear grupo" url="#" />
                             </p:submenu>
                         </p:column>
                     </p:submenu>
