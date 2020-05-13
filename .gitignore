@@ -10,6 +10,7 @@
 *.res
 *.rapt
 *.MF
+*.jar
 dist/gfdeploy/finalSWII/finalSWII-ejb_jar/.netbeans_automatic_build
 
 dist/gfdeploy/finalSWII/finalSWII-ejb_jar/.netbeans_update_resources

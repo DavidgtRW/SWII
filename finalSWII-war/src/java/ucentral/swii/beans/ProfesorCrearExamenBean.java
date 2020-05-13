@@ -11,16 +11,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.ValueChangeEvent;
 import ucentral.swii.entities.Examen;
 import ucentral.swii.entities.Materia;
+import ucentral.swii.entities.Preguntaopcionmultiple;
 import ucentral.swii.entities.Preguntaverdaderofalso;
+import ucentral.swii.entities.Respuestaopcionmultiple;
+import ucentral.swii.manejodatoscrearexamen.PreguntaOpcionMultiple;
 import ucentral.swii.manejodatoscrearexamen.PreguntaVerdaderoOFalso;
+import ucentral.swii.manejodatoscrearexamen.Respuesta;
 import ucentral.swii.model.ExamenFacadeLocal;
 import ucentral.swii.model.MateriaFacade;
 import ucentral.swii.model.MateriaFacadeLocal;
+import ucentral.swii.model.PreguntaopcionmultipleFacade;
+import ucentral.swii.model.PreguntaopcionmultipleFacadeLocal;
 import ucentral.swii.model.PreguntaverdaderofalsoFacadeLocal;
+import ucentral.swii.model.RespuestaopcionmultipleFacadeLocal;
 
 /**
  *
@@ -38,7 +46,12 @@ public class ProfesorCrearExamenBean implements Serializable {
 
     @EJB
     private PreguntaverdaderofalsoFacadeLocal preguntaverdaderofalsoFacadeLocal;
-
+    
+    @EJB
+    private PreguntaopcionmultipleFacadeLocal preguntaopcionmultipleFacadeLocal;
+    
+    @EJB
+    private RespuestaopcionmultipleFacadeLocal respuestaopcionmultipleFacadeLocal;
     /*Materia*/
     private List<Materia> lstMaterias;
     private Materia materia;
@@ -49,15 +62,33 @@ public class ProfesorCrearExamenBean implements Serializable {
 
     private int numeroPreguntasVerdaderoOFalso;
     private List<String> numeroPreguntas;
+    
+    private int numeroPreguntasOpcionMultiple;
+    private List<String> numeroPreguntasMultiple;
 
     private String respVerdaderoOFalso;
 
     private List<PreguntaVerdaderoOFalso> lstPreguntaVerdaderoOFalsos;
+    
+    private List<PreguntaOpcionMultiple> lstPreguntaOpcionMultiple;
 
     private boolean mostrarTablaPreguntasVerdaderoOFalso;
     private boolean mostrarBotonAceptar;
 
     private List<String> verdaderoOFalso;
+    
+    private List<String> valorCorrecto;
+    
+    private String enunciadoRespuesta1;
+    private String valorRespuesta1;
+    private String enunciadoRespuesta2;
+    private String valorRespuesta2;
+    private String enunciadoRespuesta3;
+    private String valorRespuesta3;
+    private String enunciadoRespuesta4;
+    private String valorRespuesta4;
+    
+    private PreguntaOpcionMultiple preguntaOpcionMultiple;
 
     /**
      * Creates a new instance of ProfesorCrearExamenBean
@@ -68,10 +99,21 @@ public class ProfesorCrearExamenBean implements Serializable {
     }
 
     private void inicializar() {
+        preguntaOpcionMultiple = new PreguntaOpcionMultiple();
         nombreExamen = "";
+        enunciadoRespuesta1 = "";
+        valorRespuesta1 = "";
+        enunciadoRespuesta2 = "";
+        valorRespuesta2 = "";
+        enunciadoRespuesta3 = "";
+        valorRespuesta3 = "";
+        enunciadoRespuesta4 = "";
+        valorRespuesta4 = "";
         llenarNumeroPreguntas();
         llenarVerdaderoOFalso();
+        llenarValorCorrecto();
         lstPreguntaVerdaderoOFalsos = new ArrayList<>();
+        lstPreguntaOpcionMultiple = new ArrayList<>();
         mostrarTablaPreguntasVerdaderoOFalso = false;
         mostrarBotonAceptar = true;
 
@@ -82,12 +124,23 @@ public class ProfesorCrearExamenBean implements Serializable {
         verdaderoOFalso.add("Verdadero");
         verdaderoOFalso.add("Falso");
     }
+    
+    private void llenarValorCorrecto() {
+        valorCorrecto = new ArrayList<>();
+        valorCorrecto.add("Correcto");
+        valorCorrecto.add("Incorrecto");
+    }
 
     private void llenarNumeroPreguntas() {
         //options
         numeroPreguntas = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             numeroPreguntas.add(String.valueOf(i + 1));
+        }
+        
+        numeroPreguntasMultiple = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            numeroPreguntasMultiple.add(String.valueOf(i + 1));
         }
     }
 
@@ -117,6 +170,8 @@ public class ProfesorCrearExamenBean implements Serializable {
                 preguntaverdaderofalsoAux.setExamen(examenAux);
                 preguntaverdaderofalsoFacadeLocal.insertar(preguntaverdaderofalsoAux);
             }
+            
+            finalizarPreguntasOpcionMultiple(examenAux);
 
         } catch (Exception e) {
             System.err.println("Error"+e);
@@ -125,13 +180,83 @@ public class ProfesorCrearExamenBean implements Serializable {
 
         inicializar();
     }
+    
+    public void finalizarPreguntasOpcionMultiple(Examen examenAux){
+        for(PreguntaOpcionMultiple preguntaOpcionMultiple: lstPreguntaOpcionMultiple){
+            Preguntaopcionmultiple preguntaopcionmultipleAux = new Preguntaopcionmultiple();
+            preguntaopcionmultipleAux.setIdpreguntam(Long.valueOf(preguntaopcionmultipleFacadeLocal.ultimoRegistro()));
+            preguntaopcionmultipleAux.setEnunciado(preguntaOpcionMultiple.getEnunciado());
+            preguntaopcionmultipleAux.setExamen(examenAux);
+            preguntaopcionmultipleFacadeLocal.insertar(preguntaopcionmultipleAux);
+            
+            finalizarRespuestassOpcionMultiple(preguntaOpcionMultiple, preguntaopcionmultipleAux);
+        }
+    }
+    
+    public void finalizarRespuestassOpcionMultiple(PreguntaOpcionMultiple preguntaOpcionMultiple, Preguntaopcionmultiple preguntaopcionmultipleAux){
+     
+            Respuestaopcionmultiple respuestaopcionmultipleAux1 = new Respuestaopcionmultiple();
+            respuestaopcionmultipleAux1.setEnunciado(preguntaOpcionMultiple.getEnunciadoRespuesta1());
+            respuestaopcionmultipleAux1.setRespuesta(preguntaOpcionMultiple.getValorRespuesta1());
+            respuestaopcionmultipleAux1.setPreguntaopcionmultiple(preguntaopcionmultipleAux);
+            respuestaopcionmultipleFacadeLocal.insertar(respuestaopcionmultipleAux1);
+            Respuestaopcionmultiple respuestaopcionmultipleAux2 = new Respuestaopcionmultiple();
+            respuestaopcionmultipleAux2.setEnunciado(preguntaOpcionMultiple.getEnunciadoRespuesta2());
+            respuestaopcionmultipleAux2.setRespuesta(preguntaOpcionMultiple.getValorRespuesta2());
+            respuestaopcionmultipleAux2.setPreguntaopcionmultiple(preguntaopcionmultipleAux);
+            respuestaopcionmultipleFacadeLocal.insertar(respuestaopcionmultipleAux2);
+            Respuestaopcionmultiple respuestaopcionmultipleAux3 = new Respuestaopcionmultiple();
+            respuestaopcionmultipleAux3.setEnunciado(preguntaOpcionMultiple.getEnunciadoRespuesta3());
+            respuestaopcionmultipleAux3.setRespuesta(preguntaOpcionMultiple.getValorRespuesta3());
+            respuestaopcionmultipleAux3.setPreguntaopcionmultiple(preguntaopcionmultipleAux);
+            respuestaopcionmultipleFacadeLocal.insertar(respuestaopcionmultipleAux3);
+            Respuestaopcionmultiple respuestaopcionmultipleAux4 = new Respuestaopcionmultiple();
+            respuestaopcionmultipleAux4.setEnunciado(preguntaOpcionMultiple.getEnunciadoRespuesta4());
+            respuestaopcionmultipleAux4.setRespuesta(preguntaOpcionMultiple.getValorRespuesta4());
+            respuestaopcionmultipleAux4.setPreguntaopcionmultiple(preguntaopcionmultipleAux);
+            respuestaopcionmultipleFacadeLocal.insertar(respuestaopcionmultipleAux4);
+    }
+    
+    public void aceptarRespuestas() {
+        
+        List<Respuesta> respuestasAux = preguntaOpcionMultiple.getRespuestas();
+        Respuesta respuesta1 = respuestasAux.get(0);
+        respuesta1.setEnunciadoRespuesta(enunciadoRespuesta1);
+        respuesta1.setCorrecto(valorRespuesta1);
+        respuestasAux.set(0, respuesta1);
+        Respuesta respuesta2 = respuestasAux.get(1);
+        respuesta2.setEnunciadoRespuesta(enunciadoRespuesta2);
+        respuesta2.setCorrecto(valorRespuesta2);
+        respuestasAux.set(1, respuesta2);
+        Respuesta respuesta3 = respuestasAux.get(2);
+        respuesta3.setEnunciadoRespuesta(enunciadoRespuesta3);
+        respuesta3.setCorrecto(valorRespuesta3);
+        respuestasAux.set(2, respuesta3);
+        Respuesta respuesta4 = respuestasAux.get(3);
+        respuesta4.setEnunciadoRespuesta(enunciadoRespuesta4);
+        respuesta4.setCorrecto(valorRespuesta4);
+        System.out.println("MARCA101: " + valorRespuesta4);
+        respuestasAux.set(3, respuesta4);
+        
+        preguntaOpcionMultiple.setRespuestas(respuestasAux);
+        System.out.println("MARCA70: " + preguntaOpcionMultiple.getRespuestas().size());
+    }
+    
+    public void asignarPregunta(PreguntaOpcionMultiple preguntaOpcionMultipleaux) {
+        this.preguntaOpcionMultiple = preguntaOpcionMultipleaux; 
+        System.out.println("MARCA71.1: " + preguntaOpcionMultiple.getRespuestas().size());
+        System.out.println("MARCA71.2: " + preguntaOpcionMultiple.getEnunciado());
+        System.out.println("MARCA71.3: " + lstPreguntaVerdaderoOFalsos.get(0).getEnunciado());
+    }
 
     public void mostrarTabla(ActionListener actionListener) {
 
         llenarLstMaterias();
         llenarListaPreguntas(actionListener);
+        llenarListaPreguntasOpcionMultiple(actionListener);
         mostrarBotonAceptar = false;
         mostrarTablaPreguntasVerdaderoOFalso = true;
+        System.out.println("MARCA69: " + numeroPreguntasVerdaderoOFalso);
     }
 
     /*
@@ -147,6 +272,12 @@ public class ProfesorCrearExamenBean implements Serializable {
         numeroPreguntasVerdaderoOFalso = Integer.valueOf(numeroPreguntasAux);
         System.out.println("MARCA20: " + numeroPreguntasVerdaderoOFalso);
     }
+    
+    public void cambiarNumeroPreguntasOpcionMultiple(ValueChangeEvent event) {
+        String numeroPreguntasAux = (String) event.getNewValue();
+        numeroPreguntasOpcionMultiple = Integer.valueOf(numeroPreguntasAux);
+        System.out.println("MARCA21: " + numeroPreguntasOpcionMultiple);
+    }
 
     public void llenarListaPreguntas(ActionListener actionListener) {
 
@@ -156,6 +287,17 @@ public class ProfesorCrearExamenBean implements Serializable {
             preguntaVerdaderoOFalso.setEnunciado("");
             preguntaVerdaderoOFalso.setRespuesta("");
             lstPreguntaVerdaderoOFalsos.add(preguntaVerdaderoOFalso);
+        }
+
+    }
+    
+    public void llenarListaPreguntasOpcionMultiple(ActionListener actionListener) {
+
+        for (int i = 0; i < numeroPreguntasOpcionMultiple; i++) {
+            PreguntaOpcionMultiple preguntaOpcionMultiple = new PreguntaOpcionMultiple();
+            preguntaOpcionMultiple.setNumeroPregunta(i + 1);
+            preguntaOpcionMultiple.setEnunciado("");
+            lstPreguntaOpcionMultiple.add(preguntaOpcionMultiple);
         }
 
     }
@@ -193,7 +335,7 @@ public class ProfesorCrearExamenBean implements Serializable {
     }
 
     public boolean isMostrarTablaPreguntasVerdaderoOFalso() {
-        System.out.println("MARCA 22: " + mostrarTablaPreguntasVerdaderoOFalso);
+        //System.out.println("MARCA 22: " + mostrarTablaPreguntasVerdaderoOFalso);
         return mostrarTablaPreguntasVerdaderoOFalso;
     }
 
@@ -240,5 +382,127 @@ public class ProfesorCrearExamenBean implements Serializable {
     public void setIdMateria(Long idMateria) {
         this.idMateria = idMateria;
     }
+
+    public PreguntaverdaderofalsoFacadeLocal getPreguntaverdaderofalsoFacadeLocal() {
+        return preguntaverdaderofalsoFacadeLocal;
+    }
+
+    public void setPreguntaverdaderofalsoFacadeLocal(PreguntaverdaderofalsoFacadeLocal preguntaverdaderofalsoFacadeLocal) {
+        this.preguntaverdaderofalsoFacadeLocal = preguntaverdaderofalsoFacadeLocal;
+    }
+
+    public Materia getMateria() {
+        return materia;
+    }
+
+    public void setMateria(Materia materia) {
+        this.materia = materia;
+    }
+
+    public int getNumeroPreguntasOpcionMultiple() {
+        return numeroPreguntasOpcionMultiple;
+    }
+
+    public void setNumeroPreguntasOpcionMultiple(int numeroPreguntasOpcionMultiple) {
+        this.numeroPreguntasOpcionMultiple = numeroPreguntasOpcionMultiple;
+    }
+
+    public List<String> getNumeroPreguntasMultiple() {
+        return numeroPreguntasMultiple;
+    }
+
+    public void setNumeroPreguntasMultiple(List<String> numeroPreguntasMultiple) {
+        this.numeroPreguntasMultiple = numeroPreguntasMultiple;
+    }
+
+    public List<PreguntaOpcionMultiple> getLstPreguntaOpcionMultiple() {
+        return lstPreguntaOpcionMultiple;
+    }
+
+    public void setLstPreguntaOpcionMultiple(List<PreguntaOpcionMultiple> lstPreguntaOpcionMultiple) {
+        this.lstPreguntaOpcionMultiple = lstPreguntaOpcionMultiple;
+    }
+
+    public String getEnunciadoRespuesta1() {
+        return enunciadoRespuesta1;
+    }
+
+    public void setEnunciadoRespuesta1(String enunciadoRespuesta1) {
+        this.enunciadoRespuesta1 = enunciadoRespuesta1;
+    }
+
+    public String getValorRespuesta1() {
+        return valorRespuesta1;
+    }
+
+    public void setValorRespuesta1(String valorRespuesta1) {
+        this.valorRespuesta1 = valorRespuesta1;
+    }
+
+    public String getEnunciadoRespuesta2() {
+        return enunciadoRespuesta2;
+    }
+
+    public void setEnunciadoRespuesta2(String enunciadoRespuesta2) {
+        this.enunciadoRespuesta2 = enunciadoRespuesta2;
+    }
+
+    public String getValorRespuesta2() {
+        return valorRespuesta2;
+    }
+
+    public void setValorRespuesta2(String valorRespuesta2) {
+        this.valorRespuesta2 = valorRespuesta2;
+    }
+
+    public String getEnunciadoRespuesta3() {
+        return enunciadoRespuesta3;
+    }
+
+    public void setEnunciadoRespuesta3(String enunciadoRespuesta3) {
+        this.enunciadoRespuesta3 = enunciadoRespuesta3;
+    }
+
+    public String getValorRespuesta3() {
+        return valorRespuesta3;
+    }
+
+    public void setValorRespuesta3(String valorRespuesta3) {
+        this.valorRespuesta3 = valorRespuesta3;
+    }
+
+    public String getEnunciadoRespuesta4() {
+        return enunciadoRespuesta4;
+    }
+
+    public void setEnunciadoRespuesta4(String enunciadoRespuesta4) {
+        this.enunciadoRespuesta4 = enunciadoRespuesta4;
+    }
+
+    public String getValorRespuesta4() {
+        return valorRespuesta4;
+    }
+
+    public void setValorRespuesta4(String valorRespuesta4) {
+        this.valorRespuesta4 = valorRespuesta4;
+    }
+
+    public PreguntaOpcionMultiple getPreguntaOpcionMultiple() {
+        return preguntaOpcionMultiple;
+    }
+
+    public void setPreguntaOpcionMultiple(PreguntaOpcionMultiple preguntaOpcionMultiple) {
+        this.preguntaOpcionMultiple = preguntaOpcionMultiple;
+    }
+
+    public List<String> getValorCorrecto() {
+        return valorCorrecto;
+    }
+
+    public void setValorCorrecto(List<String> valorCorrecto) {
+        this.valorCorrecto = valorCorrecto;
+    }
+    
+    
 
 }
