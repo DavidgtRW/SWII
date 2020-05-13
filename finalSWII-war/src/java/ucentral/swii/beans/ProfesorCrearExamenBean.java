@@ -217,38 +217,6 @@ public class ProfesorCrearExamenBean implements Serializable {
             respuestaopcionmultipleFacadeLocal.insertar(respuestaopcionmultipleAux4);
     }
     
-    public void aceptarRespuestas() {
-        
-        List<Respuesta> respuestasAux = preguntaOpcionMultiple.getRespuestas();
-        Respuesta respuesta1 = respuestasAux.get(0);
-        respuesta1.setEnunciadoRespuesta(enunciadoRespuesta1);
-        respuesta1.setCorrecto(valorRespuesta1);
-        respuestasAux.set(0, respuesta1);
-        Respuesta respuesta2 = respuestasAux.get(1);
-        respuesta2.setEnunciadoRespuesta(enunciadoRespuesta2);
-        respuesta2.setCorrecto(valorRespuesta2);
-        respuestasAux.set(1, respuesta2);
-        Respuesta respuesta3 = respuestasAux.get(2);
-        respuesta3.setEnunciadoRespuesta(enunciadoRespuesta3);
-        respuesta3.setCorrecto(valorRespuesta3);
-        respuestasAux.set(2, respuesta3);
-        Respuesta respuesta4 = respuestasAux.get(3);
-        respuesta4.setEnunciadoRespuesta(enunciadoRespuesta4);
-        respuesta4.setCorrecto(valorRespuesta4);
-        System.out.println("MARCA101: " + valorRespuesta4);
-        respuestasAux.set(3, respuesta4);
-        
-        preguntaOpcionMultiple.setRespuestas(respuestasAux);
-        System.out.println("MARCA70: " + preguntaOpcionMultiple.getRespuestas().size());
-    }
-    
-    public void asignarPregunta(PreguntaOpcionMultiple preguntaOpcionMultipleaux) {
-        this.preguntaOpcionMultiple = preguntaOpcionMultipleaux; 
-        System.out.println("MARCA71.1: " + preguntaOpcionMultiple.getRespuestas().size());
-        System.out.println("MARCA71.2: " + preguntaOpcionMultiple.getEnunciado());
-        System.out.println("MARCA71.3: " + lstPreguntaVerdaderoOFalsos.get(0).getEnunciado());
-    }
-
     public void mostrarTabla(ActionListener actionListener) {
 
         llenarLstMaterias();
