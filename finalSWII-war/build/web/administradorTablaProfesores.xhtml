@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./Templates/TemplatePantallaPrincipalAdministrador.xhtml">    
+            <ui:define name="content">
+                <f:view>
+                    <div align="center">
+                        <h:form id="tblProfesores">
+                            <div>
+                                <p:dataTable value="#{administradorBean.profesores}" var="profesor" id="tbl">
+                                    <p:column headerText=" ID">
+                                        <h:outputText value="#{profesor.idProfesor}"/>
+                                    </p:column>
+                                    <p:column headerText="CORREO">
+                                        <h:outputText value="#{profesor.correo}"/>
+                                    </p:column>
+                                    <p:column headerText="NOMBRE USUARIO">
+                                        <h:outputText value="#{profesor.usuario.nombreUsuario}"/>
+                                    </p:column>
+                                    <p:column headerText="ACCIONES">
+                                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20" >
+                                            <p:commandButton value="Eliminar" update=":tblProfesores" style="width: 100%"
+                                                             actionListener="#{administradorBean.eliminarProfesor(profesor)}"> 
+                                                <p:confirm header="Eliminar" message="¿Confirmar operación?" icon="pi pi-exclamation-triangle" />
+                                            </p:commandButton>
+                                            <p:commandButton value="Editar" update=":tblProfesores" style="width: 100%">
+                                            </p:commandButton>
+
+                                        </h:panelGrid>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                            </p:confirmDialog>
+                        </h:form>
+                    </div>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

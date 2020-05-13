@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./Templates/TemplatePantallaPrincipalProfesor.xhtml">
+            <ui:define name="content">
+                <f:view id="form">
+                    <div align="center">
+                        <h:form id="regInicial">
+                            <p:panel id="inicial">
+                                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
+
+                                    <p:outputLabel value="Nombre Examen:" style="font-weight: bold"/>
+                                    <p:inputText value="#{profesorCrearExamenBean.nombreExamen}" disabled="false"
+                                                 required="true" requiredMessage="Complete el campo Nombre Examen"/> 
+                                    <p:outputLabel value="Numero preguntas verdadero o falso:" style="font-weight: bold"/>
+                                    <p:selectOneMenu id="numPreguntas" 
+                                                     dynamic="true" style="width:125px"
+                                                     required="true" requiredMessage="Seleccione numero preguntas"
+                                                     onchange="submit()"
+                                                     valueChangeListener="#{profesorCrearExamenBean.cambiarNumeroPreguntas}">
+                                        <f:selectItem itemLabel="Seleccione numero" itemValue="" />
+                                        <f:selectItems value="#{profesorCrearExamenBean.numeroPreguntas}" />
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+
+                                <div align="center">
+                                    <p:commandButton value="Aceptar" 
+                                                     actionListener="#{profesorCrearExamenBean.mostrarTabla(actionListener)}" 
+                                                     rendered="#{profesorCrearExamenBean.mostrarBotonAceptar}"
+                                                     update="regInicial">
+                                        <p:resetInput target="tblPreguntas"/>
+                                    </p:commandButton>
+                                </div>
+
+                            </p:panel>
+                            <p:panel id="tblPreguntas" rendered="#{profesorCrearExamenBean.mostrarTablaPreguntasVerdaderoOFalso}">
+                                <div align="center">
+                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="20">
+                                        <p:outputLabel value="Materia:" style="font-weight: bold"/>
+
+                                        <p:selectOneMenu value="#{profesorCrearExamenBean.idMateria}">
+                                            <f:selectItems value="#{profesorCrearExamenBean.lstMaterias}" var="materia"
+                                                           itemLabel="#{materia.nombre}" itemValue="#{materia.idmateria}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                </div>
+                                <div>
+                                    <p:dataTable value="#{profesorCrearExamenBean.lstPreguntaVerdaderoOFalsos}" var="pregunta" id="tbl">
+                                        <f:facet name="header">
+                                            Lista de preguntas Verdadero o Falso
+                                        </f:facet>
+                                        <p:column headerText="Numero" style="width: 5%">
+                                            <h:outputText value="#{pregunta.numeroPregunta}" />
+                                        </p:column>
+                                        <p:column headerText="Enunciado">
+                                            <h:inputText value="#{pregunta.enunciado}" required="true" style="width: 100%"
+                                                         requiredMessage="Llene los espacios en blanco"/>
+                                        </p:column>
+                                        <p:column headerText="Respuesta" style="width: 15%">
+                                            <p:selectOneRadio id="verOFal" value="#{pregunta.respuesta}" 
+                                                              unselectable="true" required="true">
+                                                <f:selectItems value="#{profesorCrearExamenBean.verdaderoOFalso}"/>
+                                                <!--<p:ajax event="click" listener="#{profesorCrearExamenBean.cambiarVerOFalso(pregunta)}" />-->
+                                            </p:selectOneRadio>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                                <div align="center">
+                                    <p:commandButton value="Finalizar" 
+                                                     actionListener="#{profesorCrearExamenBean.finalizar(actionListener)}"
+                                                     update="regInicial">
+                                        <p:resetInput target="numPreguntas  "/>
+                                    </p:commandButton>
+                                </div>
+                            </p:panel>
+                        </h:form>
+                    </div>
+
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+    </h:body>
+</html>
