@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    
+    
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ADMIN</from-outcome>
+            <to-view-id>/administradorPrincipal.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Registrar</from-outcome>
+            <to-view-id>/registrarEstudiante.xhtml</to-view-id>
+        </navigation-case>
+          <navigation-case>
+            <from-outcome>cambiar_contrasena</from-outcome>
+            <to-view-id>/estudianteCambioContrasena.xhtml</to-view-id>
+        </navigation-case>
+         <navigation-case>
+            <from-outcome>ingresarEstudiante</from-outcome>
+            <to-view-id>/administradorPrincipal.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+   
+    
+    <navigation-rule>
+        <from-view-id>/registrarEstudiante.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ingresar</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>PROFESOR</from-outcome>
+            <to-view-id>/profesorPrincipal.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    
+    <navigation-rule>
+        <from-view-id>/registrarEstudiante.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>correcto</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+
+    <navigation-rule>
+        <from-view-id>/estudianteCambioContrasena.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>correcto</from-outcome>
+            <to-view-id>/administradorPrincipal.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+</faces-config>
